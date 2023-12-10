@@ -2,8 +2,8 @@ const body = document.querySelector("body");
 const clockDiv = document.querySelector("#clock");
 const clockSpan = document.querySelector("#clock span");
 const CLOCKPLACE = 650;
-const snowDuration = 10;
-const snowFrequency = 7;
+const snowDuration = 3;
+const snowFrequency = 0.5;
 let dynamicStyles = null;
 
 clockDiv.style.width = `${CLOCKPLACE}px`;
@@ -29,15 +29,24 @@ function addAnimation(body) {
 }
 
 function clockSnowing() {
-  const randomTime = Math.random();
+  let randomTime = Math.random();
   const snow = document.createElement("i");
+  const snowRotate =
+    Math.round(
+      (720 * ((randomTime * snowDuration) / 2 + snowDuration / 2)) /
+        snowDuration /
+        180
+    ) * 180;
+  const snowRange = -20 + (randomTime - 0.5) * 60;
+  console.log(snowRotate, snowRange);
   snow.classList = "fa-regular fa-snowflake";
   snow.style.color = "white";
+  snow.style.textShadow = "0 1px 10px rgba(0,0,0,0.3)";
   snow.style.fontSize = `${
     (15 / ((randomTime * snowDuration) / 2 + snowDuration / 2)) * snowDuration
   }px`;
   snow.style.position = "absolute";
-  snow.style.top = "-20px";
+  snow.style.top = `${snowRange}px`;
   snow.style.left = `${
     CLOCKPLACE * 0.05 + CLOCKPLACE * (0.9 * Math.random())
   }px`;
@@ -45,21 +54,20 @@ function clockSnowing() {
       0% {
         opacity: 0%;
       }
-      10% {
+      5% {
         opacity: 100%;
-        transform: translateY(0px) rotateY(0deg);
       }
-      90% {
+      45% {
         opacity: 100%;
-        transform: translateY(300px) rotateY(${
-          (720 * ((randomTime * snowDuration) / 2 + snowDuration / 2)) /
-          snowDuration
-        }deg);
+        transform: translateY(250px) rotateY(${snowRotate}deg);
       }
-      100% {
-        opacity: 0%;
-        transform: translateY(300px);
+      95% {
+        opacity: 100%;
+        transform: translateY(250px) rotateY(${snowRotate}deg);
       }
+      100%{
+        opacity: 100%;
+        transform: translateY(250px) rotateY(${snowRotate}deg);}
     }`);
   snow.style.animation = `snowing ${
     (randomTime * snowDuration) / 2 + snowDuration / 2
@@ -75,7 +83,7 @@ function deleteSnow() {
 clockSnowing();
 console.log(clockDiv.childNodes[2]);
 setInterval(clockSnowing, snowFrequency * 100);
-setTimeout(deleteSnow, snowDuration * 1000);
+setTimeout(deleteSnow, snowDuration * 4000);
 
 // let timer2 = setTimeout(function knock() {
 //   console.log("똑똑똑");
