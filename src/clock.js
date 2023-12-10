@@ -3,7 +3,7 @@ const clockDiv = document.querySelector("#clock");
 const clockSpan = document.querySelector("#clock span");
 const CLOCKPLACE = 650;
 const snowDuration = 10;
-const snowFrequency = 0.5;
+const snowFrequency = 10;
 let dynamicStyles = null;
 
 clockDiv.style.width = `${CLOCKPLACE}px`;
