@@ -2,8 +2,8 @@ const body = document.querySelector("body");
 const clockDiv = document.querySelector("#clock");
 const clockSpan = document.querySelector("#clock span");
 const CLOCKPLACE = 650;
-const snowDuration = 3;
-const snowFrequency = 0.5;
+const snowDuration = 15;
+const snowFrequency = 2;
 let dynamicStyles = null;
 
 clockDiv.style.width = `${CLOCKPLACE}px`;
@@ -40,7 +40,7 @@ function clockSnowing() {
   const snowRange = -20 + (randomTime - 0.5) * 60;
   console.log(snowRotate, snowRange);
   snow.classList = "fa-regular fa-snowflake";
-  snow.style.color = "white";
+  snow.style.color = `rgba(255,255,255,${0.5 + Math.random() * 0.5})`;
   snow.style.textShadow = "0 1px 10px rgba(0,0,0,0.3)";
   snow.style.fontSize = `${
     (15 / ((randomTime * snowDuration) / 2 + snowDuration / 2)) * snowDuration
