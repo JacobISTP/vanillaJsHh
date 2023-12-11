@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kalnia:wght@300&display=swap");
 
 #clock {
   padding: 30px 10px;
@@ -8,30 +8,13 @@
   justify-content: center;
   position: relative;
 
-  font-family: "Oswald", sans-serif;
+  font-family: "Kalnia", serif;
   font-size: 200px;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   color: whitesmoke;
 
   cursor: default;
 }
-/* @keyframes snowing {
-  0% {
-    opacity: 0%;
-  }
-  10% {
-    opacity: 100%;
-    transform: translateY(0px) rotateY(0deg);
-  }
-  90% {
-    opacity: 100%;
-    transform: translateY(300px) rotateY(720deg);
-  }
-  100% {
-    opacity: 0%;
-    transform: translateY(300px);
-  }
-} */
 #todo {
   height: 500px;
 }
