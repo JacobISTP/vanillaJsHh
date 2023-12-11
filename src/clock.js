@@ -48,10 +48,6 @@ addAnimation(`@keyframes snowing {
         opacity: 100%;
         transform: translateY(250px) rotateY(${snowRotate}deg);
       }
-      95% {
-        opacity: 100%;
-        transform: translateY(250px) rotateY(${snowRotate}deg);
-      }
       100%{
         opacity: 100%;
         transform: translateY(250px) rotateY(${snowRotate}deg);}
@@ -70,7 +66,7 @@ function clockSnowing() {
   snow.style.position = "absolute";
   snow.style.top = `${snowRange}px`;
   snow.style.left = `${
-    CLOCKPLACE * 0.05 + CLOCKPLACE * (0.9 * Math.random())
+    CLOCKPLACE * (1.1 * Math.random()) - CLOCKPLACE * 0.05
   }px`;
 
   snow.style.animation = `snowing ${
@@ -97,27 +93,27 @@ let snowRemainAmount = 0;
 function deleteAllSnow() {
   const snowRemain = document.querySelectorAll("#snowFlakes i");
   const date = new Date();
-  console.log(date.getSeconds(), date.getMilliseconds());
+  // console.log(date.getSeconds(), date.getMilliseconds());
   if (date.getSeconds() === 0 && date.getMilliseconds() <= snowFrequency) {
-    console.log("animate");
+    // console.log("animate");
     snowRemainAmount = snowRemain.length;
     for (let i = 0; i < snowRemainAmount; i++) {
-      const randomMeltingTime = Math.random();
-      let presentYPosition = 0;
+      // const randomMeltingTime = Math.random();
+      // let presentYPosition = 0;
 
-      if (
-        snowRemain[i].style.animation.split("s")[0] * 0.45 <=
-        ((snowRemainAmount - i) * snowFrequency) / 1000
-      ) {
-        presentYPosition = 250;
-      } else {
-        presentYPosition =
-          ((((snowRemainAmount - i) / 1000) * snowFrequency) /
-            snowRemain[i].style.animation.split("s")[0] /
-            0.45) *
-          250;
-      }
-      console.log(presentYPosition);
+      // if (
+      //   snowRemain[i].style.animation.split("s")[0] * 0.45 <=
+      //   ((snowRemainAmount - i) * snowFrequency) / 1000
+      // ) {
+      //   presentYPosition = 250;
+      // } else {
+      //   presentYPosition =
+      //     ((((snowRemainAmount - i) / 1000) * snowFrequency) /
+      //       snowRemain[i].style.animation.split("s")[0] /
+      //       0.45) *
+      //     250;
+      // // }
+      // console.log(presentYPosition);
       snowRemain[i].animate(
         [
           {
@@ -139,10 +135,10 @@ function deleteAllSnow() {
     }
   }
   if (date.getSeconds() === 2 && date.getMilliseconds() <= snowFrequency) {
-    console.log("remove all");
-    console.log(snowRemainAmount);
+    // console.log("remove all");
+    // console.log(snowRemainAmount);
     for (let j = 0; j < snowRemainAmount; j++) {
-      console.dir(snowRemain);
+      // console.dir(snowRemain);
       snowRemain[j].remove();
     }
   }
