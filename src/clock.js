@@ -14,7 +14,7 @@ const snowRotate =
 let dayHour = new Date().getHours();
 let snowFrequency = 1000 - (800 / 12) * Math.abs(dayHour - 12);
 let dynamicStyles = null;
-console.log(dayHour, snowFrequency);
+// console.log(dayHour, snowFrequency);
 clockDiv.style.width = `${CLOCKPLACE}px`;
 
 function clockInterval() {
@@ -23,6 +23,14 @@ function clockInterval() {
   const minute = String(date.getMinutes()).padStart(2, "0");
 
   clockSpan.innerText = `${hour} : ${minute}`;
+  let absDayHourRgb = 200 - (Math.abs(dayHour - 12) / 12) * 200;
+  console.log(absDayHourRgb);
+  clockDiv.style.background = `linear-gradient(
+    135deg,
+    rgb(96, 1, 21),
+    rgb(${absDayHourRgb}, ${absDayHourRgb}, ${absDayHourRgb}),
+    rgb(40, 71, 63)
+  )`;
 }
 clockInterval();
 setInterval(clockInterval, snowFrequency);
