@@ -36,6 +36,7 @@ document.querySelectorAll("#clock div").forEach((item) => {
   item.style.display = "flex";
   item.style.justifyContent = "center";
 });
+clockSperatorSpan.style.fontFamily = "serif";
 document.querySelector("#clockplate div:nth-child(2)").style.width =
   "fit-content";
 document.querySelectorAll("#clockplate span").forEach((item) => {
@@ -64,6 +65,10 @@ function clockInterval() {
 }
 clockInterval();
 setInterval(clockInterval, snowFrequency);
+
+clockDiv.addEventListener("click", (item) => {
+  clockDiv.classList.toggle("rotateX180");
+});
 
 //눈내리는 애니메이션 설정
 function addAnimation(body) {
@@ -191,3 +196,150 @@ function deleteAllSnow() {
 clockSnowingDefault(new Date().getSeconds());
 setInterval(clockSnowing, snowFrequency);
 setInterval(deleteAllSnow, snowFrequency);
+
+//login 창
+const login = document.querySelector("#login");
+const loginInput = document.querySelector("#login input");
+login.style.bottom = `-${CLOCKPLACEHEIGHT * 0.02}px`;
+loginInput.style.height = `${CLOCKPLACEHEIGHT * 0.12}px`;
+loginInput.style.width = `${CLOCKPLACEWIDTH * 0.5}px`;
+loginInput.style.fontSize = `${CLOCKPLACEHEIGHT * 0.12}px`;
+console.dir(loginInput);
+
+const ID = "id";
+
+login.addEventListener("submit", (item) => {
+  const user_id = loginInput.value;
+  localStorage.setItem(ID, user_id);
+  if (localStorage.getItem(`${user_id}_todo`) === null) {
+    localStorage.setItem(`${user_id}_todo`, JSON.stringify([]));
+  }
+  loginInput.value = "";
+});
+
+//greeting
+const todo = document.querySelector("#todo");
+
+if (localStorage.getItem(ID) !== null) {
+  login.remove();
+  todo.style.opacity = "100%";
+  const greetingDiv = document.createElement("div");
+  greetingDiv.style.width = "100%";
+  greetingDiv.style.display = "flex";
+  greetingDiv.style.justifyContent = "center";
+  const greeting = document.createElement("span");
+  greeting.style.position = "absolute";
+  // greeting.style.top = `-${CLOCKPLACEHEIGHT * 0.06}px`;
+  greeting.style.fontFamily = "Kalnia, serif";
+  greeting.style.cursor = "pointer";
+  greeting.style.fontSize = `${CLOCKPLACEHEIGHT * 0.12}px`;
+  greeting.style.top = "0px";
+  let absDayHourRgb = 100 - (Math.abs(dayHour - 12) / 12) * 100;
+  greeting.style.color = `rgb(${absDayHourRgb},${absDayHourRgb},${absDayHourRgb})`;
+
+  const userLoggedinId = localStorage.getItem(ID);
+  const dateHour = new Date().getHours();
+  if (dateHour < 6) {
+    greeting.innerText = `Hello. ${userLoggedinId}. How about sleep?`;
+  } else if (dateHour < 9) {
+    greeting.innerText = `Hello. ${userLoggedinId}. Good morning!`;
+  } else if (dateHour < 11) {
+    greeting.innerText = `Hello. ${userLoggedinId}. How are you?`;
+  } else if (dateHour < 13) {
+    greeting.innerText = `Hello. ${userLoggedinId}. Lunch time!`;
+  } else if (dateHour < 18) {
+    greeting.innerText = `Hello. ${userLoggedinId}. Good afternoon!`;
+  } else if (dateHour < 22) {
+    greeting.innerText = `Hello. ${userLoggedinId}. Good evening!`;
+  } else {
+    greeting.innerText = `Hello. ${userLoggedinId}. How was your day?`;
+  }
+  greetingDiv.appendChild(greeting);
+  todo.appendChild(greetingDiv);
+
+  greeting.addEventListener("click", () => {
+    localStorage.removeItem(ID);
+    window.location.reload();
+  });
+}
+
+//todo
+const todoform = document.querySelector("#todo div form");
+const todoInput = document.querySelector("#todo div form input");
+const todoListWork = document.createElement("h1");
+todoListWork.style.fontSize = `${CLOCKPLACEHEIGHT * 0.12}px`;
+todoListWork.style.fontWeight = "bold";
+todoListWork.style.marginBottom = "20px";
+todoListWork.innerText = "Work";
+
+todoform.parentNode.prepend(todoListWork);
+
+todo.style.marginTop = `${CLOCKPLACEHEIGHT * 0.12}px`;
+todo.style.height = `${(window.innerHeight - CLOCKPLACEHEIGHT) * 0.6}px`;
+todo.style.paddingTop = `${CLOCKPLACEHEIGHT * 0.2}px`;
+todoInput.style.fontSize = `${CLOCKPLACEHEIGHT * 0.1}px`;
+todoInput.placeholder = `${todoListWork.innerText} to do?`;
+
+//todo
+function saveTodo(event) {
+  let todoList = [];
+  event.preventDefault();
+  const todoItem = event.target.childNodes[0].value;
+  const todoId = Date.now();
+  const userId = localStorage.getItem(ID);
+  const todoObj = {
+    id: todoId,
+    todo: todoItem,
+  };
+  todoList = JSON.parse(localStorage.getItem(`${userId}_todo`));
+  if (todoList === null) {
+    todoList = [];
+  }
+  let parsedTodoList = todoList;
+  console.log(parsedTodoList);
+  parsedTodoList.push(todoObj);
+  console.log(todoObj);
+  localStorage.setItem(`${userId}_todo`, JSON.stringify(parsedTodoList));
+  event.target.childNodes[0].value = "";
+
+  localStorage;
+  console.dir(event);
+  paintTodo();
+}
+function paintTodo(event) {
+  const todos = JSON.parse(
+    localStorage.getItem(`${localStorage.getItem(ID)}_todo`)
+  );
+  const todoBox = document.querySelector(".todoBox");
+  todoBox.querySelectorAll("ul").forEach((item) => {
+    item.remove();
+  });
+  todos.forEach((item) => {
+    const ul = document.createElement("ul");
+    ul.id = item.id;
+    const li = document.createElement("li");
+    li.innerText = item.todo;
+    const remove = document.createElement("i");
+    remove.className = "fa-solid fa-trash-can";
+    remove.addEventListener("click", deleteTodo);
+
+    ul.appendChild(li);
+    ul.appendChild(remove);
+    todoBox.appendChild(ul);
+  });
+}
+
+function deleteTodo(event) {
+  console.dir(event);
+  let todoList = [];
+  const userId = localStorage.getItem(ID);
+  todoList = JSON.parse(localStorage.getItem(`${userId}_todo`));
+  todoList = todoList.filter((item) => {
+    return item.id !== parseInt(event.target.parentNode.id);
+  });
+  localStorage.setItem(`${userId}_todo`, JSON.stringify(todoList));
+  event.target.parentNode.remove();
+}
+paintTodo();
+
+todoform.addEventListener("submit", saveTodo);
