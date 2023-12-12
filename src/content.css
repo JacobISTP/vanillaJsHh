@@ -1,28 +1,26 @@
-@import url("https://fonts.googleapis.com/css2?family=Kalnia:wght@300&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Kalnia:wght@400&display=swap");
 
-#clock {
-  padding: 30px 10px;
+#clockplate {
   border-radius: 20px;
 
   display: flex;
   justify-content: center;
+  align-items: center;
   position: relative;
   opacity: 75%;
 
   font-family: "Kalnia", serif;
-  font-size: 200px;
-  background: linear-gradient(
-    135deg,
-    rgb(96, 1, 21),
-    rgb(0, 0, 0),
-    rgb(40, 71, 63)
-  );
   color: whitesmoke;
   box-shadow: 0px 12px 20px 10px rgba(0, 0, 0, 0.3);
 
   cursor: default;
 }
-#clock span {
+#clock {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+#clockplate span {
   text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.5);
 }
 
