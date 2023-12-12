@@ -24,7 +24,6 @@ function clockInterval() {
 
   clockSpan.innerText = `${hour} : ${minute}`;
   let absDayHourRgb = 200 - (Math.abs(dayHour - 12) / 12) * 200;
-  console.log(absDayHourRgb);
   clockDiv.style.background = `linear-gradient(
     135deg,
     rgb(96, 1, 21),
@@ -138,7 +137,12 @@ function deleteAllSnow() {
           },
           ,
         ],
-        2000 * 2 + snowFrequency
+
+        Math.floor(
+          (2000 + snowFrequency - date.getMilliseconds()) / snowFrequency
+        ) *
+          snowFrequency *
+          2
       );
     }
   }
