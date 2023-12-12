@@ -1,8 +1,15 @@
 const body = document.querySelector("body");
-const clockDiv = document.querySelector("#clock");
-const clockSpan = document.querySelector("#clock span");
+const clockDiv = document.querySelector("#clockplate");
+const clockHourSpan = document.querySelector(
+  "#clockplate div:first-child span"
+);
+const clockSperatorSpan = document.querySelector(
+  "#clockplate div:nth-child(2) span"
+);
+const clockMinuteSpan = document.querySelector(
+  "#clockplate div:nth-child(3) span"
+);
 const snowFlakes = document.querySelector("#snowFlakes");
-const CLOCKPLACE = 800;
 const snowDuration = 60000;
 const snowRotate =
   Math.round(
@@ -11,18 +18,40 @@ const snowRotate =
       180
   ) * 180;
 
+let CLOCKPLACEWIDTH = 800;
+if (window.innerWidth <= 1200) {
+  CLOCKPLACEWIDTH = window.innerWidth * 0.75;
+}
+let CLOCKPLACEHEIGHT = CLOCKPLACEWIDTH * 0.35;
+
 let dayHour = new Date().getHours();
 let snowFrequency = 1000 - (800 / 12) * Math.abs(dayHour - 12);
 let dynamicStyles = null;
-// console.log(dayHour, snowFrequency);
-clockDiv.style.width = `${CLOCKPLACE}px`;
 
+//clock 전반적인 style 설정
+clockDiv.style.width = `${CLOCKPLACEWIDTH}px`;
+clockDiv.style.height = `${CLOCKPLACEHEIGHT}px`;
+document.querySelectorAll("#clock div").forEach((item) => {
+  item.style.width = `${(CLOCKPLACEWIDTH / 8) * 3.5}px`;
+  item.style.display = "flex";
+  item.style.justifyContent = "center";
+});
+document.querySelector("#clockplate div:nth-child(2)").style.width =
+  "fit-content";
+document.querySelectorAll("#clockplate span").forEach((item) => {
+  item.style.fontSize = `${CLOCKPLACEWIDTH * 0.25}px`;
+});
+
+//snowfreqency 마다 실행하는 함수: 시간 text로, hour에 따라 배경 색 변화
 function clockInterval() {
   const date = new Date();
   const hour = String(date.getHours()).padStart(2, "0");
   const minute = String(date.getMinutes()).padStart(2, "0");
 
-  clockSpan.innerText = `${hour} : ${minute}`;
+  clockHourSpan.innerText = `${hour}`;
+  clockSperatorSpan.innerText = `:`;
+  clockMinuteSpan.innerText = `${minute}`;
+
   let absDayHourRgb = 200 - (Math.abs(dayHour - 12) / 12) * 200;
   clockDiv.style.background = `linear-gradient(
     135deg,
@@ -30,10 +59,13 @@ function clockInterval() {
     rgb(${absDayHourRgb}, ${absDayHourRgb}, ${absDayHourRgb}),
     rgb(40, 71, 63)
   )`;
+  clockDiv.style.padding = `${CLOCKPLACEHEIGHT * 0.08}px 0px`;
+  clockDiv.style.marginTop = `${window.innerHeight * 0.15}px`;
 }
 clockInterval();
 setInterval(clockInterval, snowFrequency);
 
+//눈내리는 애니메이션 설정
 function addAnimation(body) {
   if (!dynamicStyles) {
     dynamicStyles = document.createElement("style");
@@ -53,27 +85,36 @@ addAnimation(`@keyframes snowing {
       }
       45% {
         opacity: 100%;
-        transform: translateY(250px) rotateY(${snowRotate}deg);
+        transform: translateY(${
+          CLOCKPLACEHEIGHT * 1.1
+        }px) rotateY(${snowRotate}deg);
       }
       100%{
         opacity: 100%;
-        transform: translateY(250px) rotateY(${snowRotate}deg);}
+        transform: translateY(${
+          CLOCKPLACEHEIGHT * 1.1
+        }px) rotateY(${snowRotate}deg);}
     }`);
 
+//눈송이 내리는 함수: 생성, 스타일, 위치, 애니메이션 실행
 function clockSnowing() {
   let randomTime = Math.random();
   const snow = document.createElement("i");
-  const snowRange = -20 + (randomTime - 0.5) * 70;
   snow.classList = "fa-regular fa-snowflake";
   snow.style.color = `rgba(255,255,255,${0.5 + Math.random() * 0.5})`;
   snow.style.textShadow = "0 1px 10px rgba(0,0,0,0.3)";
   snow.style.fontSize = `${
-    (15 / ((randomTime * snowDuration) / 2 + snowDuration / 2)) * snowDuration
+    ((15 * CLOCKPLACEWIDTH) /
+      800 /
+      ((randomTime * snowDuration) / 2 + snowDuration / 2)) *
+    snowDuration
   }px`;
   snow.style.position = "absolute";
-  snow.style.top = `${snowRange}px`;
+  snow.style.top = `${
+    -(CLOCKPLACEHEIGHT / 18) + (randomTime - 0.5) * CLOCKPLACEHEIGHT * 0.4
+  }px`;
   snow.style.left = `${
-    CLOCKPLACE * (1.1 * Math.random()) - CLOCKPLACE * 0.05
+    CLOCKPLACEWIDTH * (1.1 * Math.random()) - CLOCKPLACEWIDTH * 0.05
   }px`;
 
   snow.style.animation = `snowing ${
@@ -82,6 +123,7 @@ function clockSnowing() {
   snowFlakes.appendChild(snow);
 }
 
+// 브라우저 실행 시 초로 초기 눈송이 형성
 function clockSnowingDefault(seconds) {
   let defaultSeconds = 0;
   while (defaultSeconds < (1000 / snowFrequency) * seconds) {
@@ -90,19 +132,12 @@ function clockSnowingDefault(seconds) {
   }
 }
 
-// function deleteSnow() {
-//   const snowMelten = document.querySelector("#clock i:nth-child(2)");
-//   console.log(snowMelten);
-//   snowMelten.remove();
-//   setTimeout(deleteSnow, snowFrequency);
-// }
+//0초 될 때 눈송이들 전체 사라지는 애니메이션, 2초 후 삭제, 나중에 흩날리는 기능 추가할 수도?
 let snowRemainAmount = 0;
 function deleteAllSnow() {
   const snowRemain = document.querySelectorAll("#snowFlakes i");
   const date = new Date();
-  // console.log(date.getSeconds(), date.getMilliseconds());
   if (date.getSeconds() === 0 && date.getMilliseconds() <= snowFrequency) {
-    // console.log("animate");
     snowRemainAmount = snowRemain.length;
     for (let i = 0; i < snowRemainAmount; i++) {
       // const randomMeltingTime = Math.random();
@@ -147,10 +182,7 @@ function deleteAllSnow() {
     }
   }
   if (date.getSeconds() === 2 && date.getMilliseconds() <= snowFrequency) {
-    // console.log("remove all");
-    // console.log(snowRemainAmount);
     for (let j = 0; j < snowRemainAmount; j++) {
-      // console.dir(snowRemain);
       snowRemain[j].remove();
     }
   }
@@ -158,5 +190,4 @@ function deleteAllSnow() {
 
 clockSnowingDefault(new Date().getSeconds());
 setInterval(clockSnowing, snowFrequency);
-// setTimeout(deleteSnow, snowDuration);
 setInterval(deleteAllSnow, snowFrequency);
