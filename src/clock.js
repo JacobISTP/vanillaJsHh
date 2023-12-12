@@ -111,7 +111,7 @@ function clockSnowing() {
   }px`;
   snow.style.position = "absolute";
   snow.style.top = `${
-    -(CLOCKPLACEHEIGHT / 18) + (randomTime - 0.5) * CLOCKPLACEHEIGHT * 0.4
+    -(CLOCKPLACEHEIGHT / 18) + (randomTime - 0.5) * CLOCKPLACEHEIGHT * 0.35
   }px`;
   snow.style.left = `${
     CLOCKPLACEWIDTH * (1.1 * Math.random()) - CLOCKPLACEWIDTH * 0.05
